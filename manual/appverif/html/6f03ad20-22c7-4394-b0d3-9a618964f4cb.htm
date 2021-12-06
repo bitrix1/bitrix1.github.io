@@ -1,0 +1,56 @@
+<html DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:tool="http://www.microsoft.com/tooltip"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=Windows-1252"></META><META NAME="save" CONTENT="history"></META><title>Attempt to use an invalid PrintTicket</title><link rel="stylesheet" type="text/css" href="../local/Classic.css"></link><script src="../local/script.js"></script></head><body><div><input type="hidden" id="userDataCache" class="userDataStyle"></input><input type="hidden" id="hiddenScrollOffset"></input></div><img id="dropDownImage" style="display:none; height:0; width:0;" src="../local/drpdown.gif"></img><img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="../local/drpdown_orange.gif"></img><img id="collapseImage" style="display:none; height:0; width:0;" src="../local/collapse.gif"></img><img id="expandImage" style="display:none; height:0; width:0;" src="../local/exp.gif"></img><img id="copyImage" style="display:none; height:0; width:0;" src="../local/copycode.gif"></img><img id="copyHoverImage" style="display:none; height:0; width:0;" src="../local/copycodeHighlight.gif"></img><div id="header"><table width="100%" id="topTable"><tr id="headerTableRow1"><td align="left"><span id="runningHeaderText"></span></td></tr><tr id="headerTableRow2"><td align="left"><span id="nsrTitle">Attempt to use an invalid PrintTicket</span></td></tr><tr id="headerTableRow3"><td></td></tr></table></div><div id="mainSection"><div id="mainBody"><div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div><p></p><h2 class="heading">Application Verifier break message</h2><div id="sectionSection0" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> Attempt to use an invalid PrintTicket</p></content></div><h2 class="heading">Probable cause</h2><div id="sectionSection1" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> This verifier stop occurs when the application calls a PrintTicket method with an invalid PrintTicket.</p></content></div><h2 class="heading">Troubleshooting steps</h2><div id="sectionSection2" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">The sample debugger output below illustrates the following troubleshooting steps:</p><ul xmlns=""><li class="unordered">
+Review the AppVerifier error message <br /><br /></li><li class="unordered">
+Dump the XML using the du command as the error message describes<br /><br /></li><li class="unordered">
+Dump the XML of the PrintTicket document (this might require more than one du command).<br /><br /></li><li class="unordered">
+Analyze the XML in the PrintTicket (this might require cutting the text from the debugger console and pasting the text into a text editor for clean-up and analysis of the XML code)<br /><br /></li><li class="unordered">
+Use k to dump the stack trace and see the routine that used the invalid PrintTicket<br /><br /></li></ul><div class="code" xmlns=""><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="../local/copycode.gif"></img>Copy Code</span></th></tr><tr><td colspan="2"><pre>=======================================
+VERIFIER STOP 0000A015 : pid 0x14F0: Attempt to use an invalid PrintTicket
+
+        07641E54 : Error messages returned by PTConform. Use du to dump the message if this parameter is not NULL.
+        0767B9D4 : PrintTicket XML text. Use du to dump the XML if this parameter is not NULL.
+        00000000 : Not used.
+        00000000 : Not used.
+
+This verifier stop was caused when the application called the PTGetPrintCapabilities method with an invalid PrintTicket
+=======================================
+
+* Use the du command to Dump the error message that PTConform returned
+0:000&gt; du 07641E54
+07641e54  "ERROR: CUtility - Match not foun"
+07641e94  "d for node 'Option', name 'Inval"
+07641ed4  "idPortrait'..ERROR: CUtility::Do"
+07641f14  "SelfConformanceCheck - The node "
+07641f54  "'Option' named 'InvalidPortrait'"
+07641f94  " is not expected here as per the"
+07641fd4  " PrintSchema spec.."
+
+* Use the du command to dump the XML from the PrintTicket document
+PrintTicket xml text
+0:000&gt; du 0767B9D4
+0767b9d4  "&lt;psf:PrintTicket xmlns:psf="http"
+0767ba14  "://schemas.microsoft.com/windows"
+0767ba54  "/2003/08/printing/printschemafra"
+0767ba94  "mework" xmlns:xsi="http://www.w3"
+0767bad4  ".org/2001/XMLSchema-instance" xm"
+0767bb14  "lns:xsd="http://www.w3.org/2001/"
+0767bb54  "XMLSchema" version="1" xmlns:ns0"
+0767bb94  "000="http://schemas.microsoft.co"
+0767bbd4  "m/windows/printing/oemdriverpt/H"
+0767bc14  "P_LaserJet_4_6_0_5278_0_" xmlns:"
+0767bc54  "psk="http://schemas.microsoft.co"
+0767bc94  "m/windows/2003/08/printing/print"
+
+* Use the k command to dump the stack trace
+0:000&gt; k
+ChildEBP RetAddr
+0013f780 73a7385b ntdll!DbgBreakPoint
+0013f984 73889ce3 vrfcore!VerifierStopMessageEx+0x4bd
+0013f9bc 73894684 vfprint!CPrintVerifierPrintTicketHelper::ValidatePrintTicket+0x84
+0013f9dc 00144074 vfprint!VfPTGetPrintCapabilities+0x78
+0013fa14 00142edc UnitTestvfPrint!GetPrintCapabilitiesWithInvalidPrintTicket+0xd4!The suspected routine
+0013fb0c 001450b6 UnitTestvfPrint!wmain+0x3dc
+0013fb50 76413833 UnitTestvfPrint!__wmainCRTStartup+0x102
+0013fb5c 775fa9bd KERNEL32!BaseThreadInitThunk+0xe
+0013fb9c 00000000 ntdll!_RtlUserThreadStart+0x23</pre></td></tr></table></span></div></content></div><h2 class="heading">Information displayed by Application Verifier</h2><div id="sectionSection3" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> Format: - This verifier stop was caused when the application called the %lS method with an invalid PrintTicket</p><p xmlns="">Parameter 1 - Error messages returned by PTConform. Use du to dump the message if this parameter is not NULL.</p><p xmlns="">Parameter 2 - PrintTicket XML text. Use du to dump the XML if this parameter is not NULL.</p><p xmlns="">Parameter 3 - Not used.</p><p xmlns="">Parameter 4 - Not used.</p></content></div><h2 class="heading">Additional information</h2><div id="sectionSection4" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> Test Layer: PrintAPI</p><p xmlns="">Stop code: 0000A015</p><p xmlns="">Severity: Error</p><p xmlns="">One-time error: no</p><p xmlns="">Error report: Break</p><p xmlns="">Log to file: yes</p><p xmlns="">Create backtrace: yes</p></content></div><!--[if gte IE 5]>
+			<tool:tip element="languageFilterToolTip" avoidmouse="false"/>
+		<![endif]--></div><div id="footer"><p></p><hr></hr><br /><br /></div></div></body></html>

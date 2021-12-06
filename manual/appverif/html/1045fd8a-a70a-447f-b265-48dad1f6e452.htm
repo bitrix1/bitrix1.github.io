@@ -1,0 +1,112 @@
+<html DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:tool="http://www.microsoft.com/tooltip"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=Windows-1252"></META><META NAME="save" CONTENT="history"></META><title>Debugging with !avrf</title><link rel="stylesheet" type="text/css" href="../local/Classic.css"></link><script src="../local/script.js"></script></head><body><div><input type="hidden" id="userDataCache" class="userDataStyle"></input><input type="hidden" id="hiddenScrollOffset"></input></div><img id="dropDownImage" style="display:none; height:0; width:0;" src="../local/drpdown.gif"></img><img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="../local/drpdown_orange.gif"></img><img id="collapseImage" style="display:none; height:0; width:0;" src="../local/collapse.gif"></img><img id="expandImage" style="display:none; height:0; width:0;" src="../local/exp.gif"></img><img id="copyImage" style="display:none; height:0; width:0;" src="../local/copycode.gif"></img><img id="copyHoverImage" style="display:none; height:0; width:0;" src="../local/copycodeHighlight.gif"></img><div id="header"><table width="100%" id="topTable"><tr id="headerTableRow1"><td align="left"><span id="runningHeaderText"></span></td></tr><tr id="headerTableRow2"><td align="left"><span id="nsrTitle">Debugging with !avrf</span></td></tr><tr id="headerTableRow3"><td></td></tr></table></div><div id="mainSection"><div id="mainBody"><div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div><p>The 
+    <b>!avrf</b>
+   extension controls the settings of Application Verifier and displays a variety of output produced by Application Verifier.</p><h2 class="heading">Syntax</h2><div id="sectionSection0" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""><b>!avrf</b></p><p xmlns="">The 
+    <b>!avrf</b>
+   command without any parameters shows the Application Verifier settings and information about the current and previous Application Verifier breaks if any.</p><p xmlns=""><b>!avrf –vs { </b><i>Length</i><b> | -a</b><i>Address</i><b> }</b></p><p xmlns="">Displays the virtual space operation log. 
+    <i>Length</i>
+   specifies the number of records to display starting from the most recent. 
+    <i>Address</i>
+   specifies the virtual address. Records of the virtual operations containing this virtual address will be displayed.</p><p xmlns=""><b>!avrf -hp { </b><i>Length</i><b> | -a </b><i>Address</i><b> }</b></p><p xmlns="">Displays the heap operation log. 
+    <i>Address</i>
+   specifies the heap address. Records of the heap operations containing this heap address will be displayed.</p><p xmlns=""><b>!avrf -cs { </b><i>Length</i><b> | -a </b><i>Address</i><b> }</b></p><p xmlns="">Displays the critical section delete log.  
+    <i>Length</i>
+   specifies the number of records to display starting from the most recent. 
+    <i>Address</i>
+   specifies the critical section address. Records for the particular critical section are displayed when 
+    <i>Address</i>
+   is specified.</p><p xmlns=""><b>!avrf -dlls [ </b><i>Length</i><b> ]</b></p><p xmlns=""> Displays the DLL load/unload log. 
+    <i>Length</i>
+   specifies the number of records to display starting from the most recent.</p><p xmlns=""><b>!avrf -trm</b></p><p xmlns="">Displays a log of all terminated and suspended threads.</p><p xmlns=""><b>!avrf -ex [ </b><i>Length</i><b> ]</b></p><p xmlns="">Displays the exception log. Application Verifier tracks all the exceptions happening in the application.</p><p xmlns=""><b>!avrf -threads [ </b><i>ThreadID</i><b> ]</b></p><p xmlns="">Displays information about threads in the target process. For child threads, the stack size and the CreateThread flags specified by the parent are displayed as well. Providing a thread ID will display information only for that particular thread.</p><p xmlns=""><b>!avrf -tp [ </b><i>ThreadID</i><b> ]</b></p><p xmlns="">Displays the thread pool log. This log may contain stack traces for various operations such as changing the thread affinity mask, changing thread priority, posting thread messages, initializing COM, and uninitializing COM from within the thread pool callback. Providing a thread ID will display information only for that particular thread.</p><p xmlns=""><b>!avrf -srw  [ </b><i>Address</i><b> | </b><i>Address Length</i><b> ] [ -stats ]</b></p><p xmlns="">Displays the Slim Reader/Writer (SRW) log. Specifying 
+    <i>Address</i>
+   will display records pertaining to that SRW lock address. When 
+    <i>Length</i>
+   is specified along with the 
+    <i>Address</i>
+  , all SRW locks within that address range are displayed. The 
+    <b>-stats</b>
+   option dumps the SRW lock statistics.</p><p xmlns=""><b>!avrf -leak [ -m </b><i>ModuleName</i><b> ] [ -r </b><i>ResourceType</i><b> ] [ -a </b><i>Address</i><b> ] [ -t ]</b></p><p xmlns="">Displays the outstanding resources log. These resources may or may not be leaks at any given point. Specifying 
+    <i>ModuleName</i>
+   (including the extension) displays all outstanding resources in the specified module. Specifying 
+    <i>ResourceType</i>
+   displays outstanding resources of that particular resource type. Specifying 
+    <i>Address</i>
+   dumps records of outstanding resources with that address. 
+    <i>ResourceType</i>
+   can be one of the following:</p><ul xmlns=""><li class="unordered">
+							Heap: Displays heap allocations using Win32 Heap APIs<br /><br /></li><li class="unordered">
+							Local: Displays Local/Global allocations<br /><br /></li><li class="unordered">
+							CRT: Displays allocations using CRT APIs<br /><br /></li><li class="unordered">
+							Virtual: Displays Virtual reservations<br /><br /></li><li class="unordered">
+							BSTR: Displays BSTR allocations <br /><br /></li><li class="unordered">
+							Registry: Displays Registry key opens<br /><br /></li><li class="unordered">
+							Power: Displays power notification objects<br /><br /></li><li class="unordered">
+							Handle: Displays thread, file, and event handle allocations<br /><br /></li></ul><p xmlns=""><b>!avrf –trace </b><i>TraceIndex</i></p><p xmlns="">Displays a stack trace for the specified trace index. Some structures use this 16-bit index number to identify a stack trace. This index points to a location within the stack trace database. If you are analyzing such a structure, you will find this syntax useful.</p><p xmlns=""><b>!avrf -cnt</b></p><p xmlns="">Displays a list of global counters.</p><p xmlns=""><b>!avrf -brk [ </b><i>BreakEventType</i><b> ]</b></p><p xmlns="">Specifies that this is a break-event command. When 
+    <b>!avrf -brk</b>
+   is used with no additional parameters, the break event settings are displayed. 
+    <i>BreakEventType</i>
+   specifies the type number of the break event. For a list of possible types, use 
+    <b>!avrf -brk</b>
+  .</p><p xmlns=""><b>!avrf -flt [ </b><i>EventType</i><i>Probability</i><b> ]</b></p><p xmlns="">Specifies that this is a fault-injection command. When 
+    <b>!avrf -flt</b>
+   is used with no additional parameters, the current fault injection settings are displayed. 
+    <i>EventType</i>
+   specifies the type number of the event. 
+    <i>Probability</i>
+   specifies the frequency with which the event will fail. This can be any integer between 0 and 1,000,000 (0xF4240).</p><p xmlns=""><b>!avrf  -flt break </b><i>EventType</i></p><p xmlns="">Causes Application Verifier to break into the debugger each time this fault is injected.</p><p xmlns=""><b>!avrf -flt stacks </b><i>Length</i></p><p xmlns="">Displays 
+    <i>Length</i>
+   number of stack traces for the most recent fault-injected operations.</p><p xmlns=""><b>!avrf -trg [ </b><i>Start</i><i>End</i><b> | dll </b><i>Module</i><b> | all ]</b></p><p xmlns="">Specifies that this is a target range command. When 
+    <b>-trg</b>
+   is used with no additional parameters, the current target ranges are displayed. 
+    <i>Start</i>
+   specifies the beginning address of the target range or exclusion range. 
+    <i>End</i>
+   specifies the ending address of the target range or exclusion range. 
+    <i>Module</i>
+   specifies the name of a module to be targeted or excluded. 
+    <i>Module</i>
+   should include the full module name, including the .exe or .dll extension. Path information should not be included. Specifying 
+    <b>all</b>
+   causes all target ranges or exclusion ranges to be reset.</p><p xmlns=""><b>!avrf -skp [ </b><i>Start</i><i>End</i><b> | dll </b><i>Module</i><b> | all | </b><i>Time</i><b> ]</b></p><p xmlns="">Specifies that this is an exclusion range command. 
+    <i>Start</i>
+   specifies the beginning address of the target range or exclusion range. 
+    <i>End</i>
+   specifies the ending address of the target range or exclusion range. 
+    <i>Module</i>
+   specifies the name of a module to be targeted or excluded. 
+    <i>Module</i>
+   should include the full module name, including the .exe or .dll extension. Path information should not be included. Specifying 
+    <b>all</b>
+   causes all target ranges or exclusion ranges to be reset. Specifying 
+    <i>Time</i>
+   causes all faults to be suppressed for 
+    <i>Time</i>
+   milliseconds after execution resumes.</p></content></div><h2 class="heading">Output</h2><div id="sectionSection1" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">The following is the output provided by 
+    <b>!avrf</b>
+   command in the debugger.</p><div class="code" xmlns=""><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="../local/copycode.gif"></img>Copy Code</span></th></tr><tr><td colspan="2"><pre>0:000&gt; !avrf
+Application verifier settings (816431A7):
+
+   - full page heap
+   - COM
+   - RPC
+   - Handles
+   - Locks
+   - Memory
+   - TLS
+   - Exceptions
+   - Threadpool
+   - Leak
+   - SRWLock
+
+No verifier stop active.
+
+Note: Sometimes bugs found by verifier manifest themselves as raised
+exceptions (access violations, stack overflows, invalid handles), 
+and it is not always necessary to have a verifier stop.</pre></td></tr></table></span></div></content></div><h2 class="heading">DLL</h2><div id="sectionSection2" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><h3 class="subHeading" xmlns=""></h3><table xmlns=""><tr><td colspan="1"><p>Windows NT 4.0</p></td><td colspan="1"><p>Unavailable </p></td></tr><tr><td colspan="1"><p>Windows 2000</p></td><td colspan="1"><p>Unavailable </p></td></tr><tr><td colspan="1"><p>Windows XP and later</p></td><td colspan="1"><p>Exts.dll</p></td></tr></table></content></div><h2 class="heading">Comments</h2><div id="sectionSection3" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">When the 
+    <b>!avrf</b>
+   extension is used with no parameters, it displays the current Application Verifier options.</p><p xmlns="">If an Application Verifier Stop has occurred, the 
+    <b>!avrf</b>
+   extension with no parameters will reveal the nature of the stop and what caused it.</p><p xmlns="">If symbols for ntdll.dll and verifier.dll are missing, the 
+    <b>!avrf extension</b>
+   will generate an error message. </p></content></div><!--[if gte IE 5]>
+			<tool:tip element="languageFilterToolTip" avoidmouse="false"/>
+		<![endif]--></div><div id="footer"><p></p><hr></hr><br /><br /></div></div></body></html>

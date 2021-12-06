@@ -1,0 +1,54 @@
+<html DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:tool="http://www.microsoft.com/tooltip"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=Windows-1252"></META><META NAME="save" CONTENT="history"></META><title>Leak Stop Details</title><link rel="stylesheet" type="text/css" href="../local/Classic.css"></link><script src="../local/script.js"></script></head><body><div><input type="hidden" id="userDataCache" class="userDataStyle"></input><input type="hidden" id="hiddenScrollOffset"></input></div><img id="dropDownImage" style="display:none; height:0; width:0;" src="../local/drpdown.gif"></img><img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="../local/drpdown_orange.gif"></img><img id="collapseImage" style="display:none; height:0; width:0;" src="../local/collapse.gif"></img><img id="expandImage" style="display:none; height:0; width:0;" src="../local/exp.gif"></img><img id="copyImage" style="display:none; height:0; width:0;" src="../local/copycode.gif"></img><img id="copyHoverImage" style="display:none; height:0; width:0;" src="../local/copycodeHighlight.gif"></img><div id="header"><table width="100%" id="topTable"><tr id="headerTableRow1"><td align="left"><span id="runningHeaderText"></span></td></tr><tr id="headerTableRow2"><td align="left"><span id="nsrTitle">Leak Stop Details</span></td></tr><tr id="headerTableRow3"><td></td></tr></table></div><div id="mainSection"><div id="mainBody"><div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div><p>Leak Verifier tracks resources allocated by DLL or EXE modules. If a resource that was allocated by a DLL or EXE module is not released by the time the module is unloaded, Leak Verifier issues a stop. Leak Verifier is designed to catch virtual reservation, registry, handle, and heap leaks. Leak Verifier is enabled by default.</p><div class="alert"><table width="100%" cellspacing="0" cellpadding="0"><tr><th align="left"><img class="note" src="../local/Warning.gif"></img>
+    Caution: 
+  </th></tr><tr><td>
+					Leak Verifier does not report any resource leaks until the DLL or EXE that allocated the resource is unloaded. To inspect resource allocations in a loaded DLL or EXE, use the 
+    <b>!avrf -leak</b>
+   debugger extension.<p></p></td></tr></table><p></p></div><p>Leak Verifier is available starting with Windows 7.</p><p></p><h2 class="heading">Leak Verifier Stops</h2><div id="sectionSection0" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> Following list identifies the Leak Verifier stops.</p><h3 class="subHeading" xmlns=""></h3><table xmlns=""><tr><td colspan="1"><p><b>Error message</b></p></td><td colspan="1"><p><b>Stop code</b></p></td></tr><tr><td colspan="1"><p><a href="dd3fb9ab-ec16-469b-b749-a1996dc49cd2.htm">A heap allocation was leaked</a></p></td><td colspan="1"><p>900</p></td></tr><tr><td colspan="1"><p><a href="7cead46f-57a3-4606-a47f-e680bf449a71.htm">A Handle was leaked</a></p></td><td colspan="1"><p>901</p></td></tr><tr><td colspan="1"><p><a href="9a6031f4-8e6a-4c58-b4c8-878a14dd584b.htm">An HKEY was leaked</a></p></td><td colspan="1"><p>902</p></td></tr><tr><td colspan="1"><p><a href="64a2fac3-efc9-4b15-97ee-e6028297a568.htm">A virtual reservation was leaked</a></p></td><td colspan="1"><p>903</p></td></tr><tr><td colspan="1"><p><a href="3c4d65fb-cf0d-477f-ae18-cd72a8c88934.htm">A BSTR was leaked</a></p></td><td colspan="1"><p>904</p></td></tr><tr><td colspan="1"><p><a href="56ec7ef9-3c1f-42e5-ab3d-d0590838e916.htm">A power notification was not unregistered</a></p></td><td colspan="1"><p>905</p></td></tr></table></content></div><h2 class="heading">Properties</h2><div id="sectionSection1" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">The following property is available for the Leak verification layer. To set the property, select the Leak layer in the Application Verifier user interface, and open the <a href="c9ee7540-ea04-4454-8f75-c6de35c8321f.htm">Property Window</a>.</p><h3 class="subHeading" xmlns=""></h3><table xmlns=""><tr><th>
+									Property
+								</th><th>
+									Description
+								</th></tr><tr><td><p>ExcludeDlls</p></td><td><p>A comma-separated list of DLLs to exclude from leak verification. Maximum size is 255 characters.</p></td></tr></table><p xmlns="">The following command line enables leak verification for myApp.exe and all binaries loaded by myApp.exe except KnownLeaker.dll.</p><div class="code" xmlns=""><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="../local/copycode.gif"></img>Copy Code</span></th></tr><tr><td colspan="2"><pre>appverif –enable Leak –for myApp.exe –with Leak.ExcludeDlls=KnownLeaker.dll
+</pre></td></tr></table></span></div><p xmlns="">If you enable leak verification as shown the preceding example, the Leak verification layer still tracks the resources for KnownLeaker.dll, but it does not report any leaks caused by KnownLeaker.dll.</p></content></div><h2 class="heading">Additional information</h2><div id="sectionSection2" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">You can use the 
+    <b>!avrf –leak</b>
+   debugger extension to look at all outstanding resources in a loaded module.</p><div class="code" xmlns=""><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="../local/copycode.gif"></img>Copy Code</span></th></tr><tr><td colspan="2"><pre>!avrf -leak  [-m &lt;DllName&gt;]  [-r  &lt;ResourceType&gt;] [ -a &lt;address&gt;] [-t] [/?] [-?]
+
+Display all the outstanding resources in myModule.dll.
+!avrf -leak -m myModule.dll
+
+Display all the outstanding heap resources in myModule.dll.
+!avrf -leak -m myModule.dll -r heap
+
+Display resource with &lt;address&gt; in outstanding heap resources in myModule.dll.
+!avrf -leak -m myModule.dll -r heap -a &lt;address&gt; 
+
+Display resource with &lt;address&gt; in outstanding heap resources in myModule.dll with stack trace.
+!avrf -leak -m myModule.dll -r heap -a &lt;address&gt; -t
+
+ResourceTypes:
+
+Heap
+Heap allocations using Win32 Heap APIs
+
+Local 
+Local/Global allocations
+
+CRT 
+Heap allocations using C runtime functions
+
+Virtual 
+Virtual reservations
+
+BSTR 
+BSTR allocations (These resources are tracked, but not reported as leaks by the leak check.)
+
+Registry 
+Registry keys
+
+Power
+Power notifications
+
+Handle 
+Certain types of handles (thread, file, event)
+</pre></td></tr></table></span></div></content></div><!--[if gte IE 5]>
+			<tool:tip element="languageFilterToolTip" avoidmouse="false"/>
+		<![endif]--></div><div id="footer"><p></p><hr></hr><br /><br /></div></div></body></html>

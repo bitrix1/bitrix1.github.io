@@ -1,0 +1,35 @@
+<html DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:tool="http://www.microsoft.com/tooltip"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=Windows-1252"></META><META NAME="save" CONTENT="history"></META><title>Invalid handle exception for current stack trace in Print Verifier</title><link rel="stylesheet" type="text/css" href="../local/Classic.css"></link><script src="../local/script.js"></script></head><body><div><input type="hidden" id="userDataCache" class="userDataStyle"></input><input type="hidden" id="hiddenScrollOffset"></input></div><img id="dropDownImage" style="display:none; height:0; width:0;" src="../local/drpdown.gif"></img><img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="../local/drpdown_orange.gif"></img><img id="collapseImage" style="display:none; height:0; width:0;" src="../local/collapse.gif"></img><img id="expandImage" style="display:none; height:0; width:0;" src="../local/exp.gif"></img><img id="copyImage" style="display:none; height:0; width:0;" src="../local/copycode.gif"></img><img id="copyHoverImage" style="display:none; height:0; width:0;" src="../local/copycodeHighlight.gif"></img><div id="header"><table width="100%" id="topTable"><tr id="headerTableRow1"><td align="left"><span id="runningHeaderText"></span></td></tr><tr id="headerTableRow2"><td align="left"><span id="nsrTitle">Invalid handle exception for current stack trace in Print Verifier</span></td></tr><tr id="headerTableRow3"><td></td></tr></table></div><div id="mainSection"><div id="mainBody"><div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div><p></p><h2 class="heading">Application Verifier break message</h2><div id="sectionSection0" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> Invalid handle exception for current stack trace</p></content></div><h2 class="heading">Probable cause</h2><div id="sectionSection1" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> This stop is generated when the function on the top of the stack passes an invalid handle to a system routine. Usually the kb command will reveal the value of the handle passed in the call stack. The handle will be one of the parameters of the call. Often it is the first parameter. A null handle value is one example of an invalid handle value. If the handle value appears to be valid, use the !htrace debugger extension to view the history of operations that involved the handle value. Sometimes a handle value that appears to be valid can be invalid if the handle is used after it was closed.</p><p xmlns="">For example:</p><div class="code" xmlns=""><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="../local/copycode.gif"></img>Copy Code</span></th></tr><tr><td colspan="2"><pre>0:027&gt; k
+ChildEBP RetAddr
+0765eb50 7c82ed53 ntdll!KiRaiseUserExceptionDispatcher+0x37
+0765eb54 7c821144 ntdll!KiFastSystemCall+0x3
+0765eb58 008f9cf0 ntdll!NtClose+0xc
+0765eb68 77e6c1fe vfbasics!AVrfpNtClose+0x10
+0765eb74 008f49c9 KERNEL32!CloseHandle+0x59
+0765eb84 77c34a60 vfbasics!AVrfpCloseHandle+0x89
+0765ebe4 761734a2 GDI32!GdiPlayPageEMF+0x186
+
+0:027&gt; !htrace b08
+
+--------------------------------------
+Handle = 0x00000b08 - *** BAD REFERENCE ***
+Thread ID = 0x00000170, Process ID = 0x00000228
+
+0x77e6c1fe: KERNEL32!CloseHandle+0x00000044
+0x008f49c9: vfbasics!AVrfpCloseHandle+0x00000089
+0x77c34a60: GDI32!GdiPlayPageEMF+0x00000186      &lt;-------------------------- SECOND CLOSE
+0x761734a2: localspl!SplLogWmiTraceEventExternal+0x00006f06
+0x76151feb: localspl!SplResetPrinter+0x000096d4
+0x76143faf: localspl!SplSetPrinterDataEx+0x00001a6e
+0x76143b04: localspl!SplSetPrinterDataEx+0x000015c3
+--------------------------------------
+Handle = 0x00000b08 - CLOSE
+Thread ID = 0x00000170, Process ID = 0x00000228
+
+0x77e6c1fe: KERNEL32!CloseHandle+0x00000044
+0x008f49c9: vfbasics!AVrfpCloseHandle+0x00000089
+0x77c24bef: GDI32!SetWinMetaFileBits+0x00000923   &lt;-------------------------------- FIRST CLOSE
+0x77c38e55: GDI32!GdiDrawStream+0x00000d06
+0x77c34a39: GDI32!GdiPlayPageEMF+0x0000015f
+0x761734a2: localspl!SplLogWmiTraceEventExternal+0x00006f06</pre></td></tr></table></span></div></content></div><h2 class="heading">Information displayed by Application Verifier</h2><div id="sectionSection2" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> Parameter 1 - Exception code. </p><p xmlns="">Parameter 2 - Exception record. Use .exr to display it. </p><p xmlns="">Parameter 3 - Context record. Use .cxr to display it. </p><p xmlns="">Parameter 4 - Not used.</p></content></div><h2 class="heading">Additional information</h2><div id="sectionSection3" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> Test Layer: PrintDriver</p><p xmlns="">Stop code: 0000D003</p><p xmlns="">Severity: Error</p><p xmlns="">One-time error: no</p><p xmlns="">Non Continuable: yes</p><p xmlns="">Error report: Break</p><p xmlns="">Log to file: yes</p><p xmlns="">Create backtrace: yes</p></content></div><!--[if gte IE 5]>
+			<tool:tip element="languageFilterToolTip" avoidmouse="false"/>
+		<![endif]--></div><div id="footer"><p></p><hr></hr><br /><br /></div></div></body></html>

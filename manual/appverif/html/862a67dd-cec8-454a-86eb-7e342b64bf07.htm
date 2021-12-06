@@ -1,0 +1,62 @@
+<html DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:tool="http://www.microsoft.com/tooltip"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=Windows-1252"></META><META NAME="save" CONTENT="history"></META><title>Testing Applications</title><link rel="stylesheet" type="text/css" href="../local/Classic.css"></link><script src="../local/script.js"></script></head><body><div><input type="hidden" id="userDataCache" class="userDataStyle"></input><input type="hidden" id="hiddenScrollOffset"></input></div><img id="dropDownImage" style="display:none; height:0; width:0;" src="../local/drpdown.gif"></img><img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="../local/drpdown_orange.gif"></img><img id="collapseImage" style="display:none; height:0; width:0;" src="../local/collapse.gif"></img><img id="expandImage" style="display:none; height:0; width:0;" src="../local/exp.gif"></img><img id="copyImage" style="display:none; height:0; width:0;" src="../local/copycode.gif"></img><img id="copyHoverImage" style="display:none; height:0; width:0;" src="../local/copycodeHighlight.gif"></img><div id="header"><table width="100%" id="topTable"><tr id="headerTableRow1"><td align="left"><span id="runningHeaderText"></span></td></tr><tr id="headerTableRow2"><td align="left"><span id="nsrTitle">Testing Applications</span></td></tr><tr id="headerTableRow3"><td></td></tr></table></div><div id="mainSection"><div id="mainBody"><div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div><p>To verify an application, you need to add the application to the tool, select the test(s) you would like to run, and execute the application. Following are the details.</p><h2 class="heading">Tests within AppVerifier</h2><div id="sectionSection0" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">The tests included in the Application Verifier are to help software developers avoid common mistakes by using verification layers to validate the usage of API families: </p><p xmlns=""></p><p xmlns=""></p><ul xmlns=""><li class="unordered"><a href="d3931472-af2e-45e8-8ff3-c92b0ec676ee.htm">Basics Verification Layer</a> - These are the core set of tests that check for issues within heap, handles, locks, and more. <br /><br /></li><li class="unordered"><a href="c599afd8-400b-49a1-a1bc-b11f1442069e.htm">Low Resource Simulation Verification Layer</a> - This test simulates an environment under low resources for example, out of memory.<br /><br /></li><li class="unordered"><a href="ad7867cd-8906-4284-b05b-e151aa810021.htm">Limited User Account Predictor Verification Layer</a> - This test simulates an environment running as a user with a limited user account and has two primary goals: predictive and diagnostic. The predictive element determines whether an application that is running in an administrative environment would also run well in an environment with less privilege, as a limited user, for example. The diagnostic element evaluates an application when it is running as a limited user and identifies potential problems.<br /><br /></li><li class="unordered"><a href="b806d5ac-aa1a-4a43-a81f-52d7d1dd58ad.htm">Miscellaneous Verification Layer</a>- This consists of two checks Dirty Stacks and Dangerous APIs.<br /><br /></li></ul></content></div><h2 class="heading">Test differences between the last version and v3.0</h2><div id="sectionSection1" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">There are a few tests that you will not find within this release of Application Verifier that were in previous releases: </p><p xmlns=""><li>Compatibility tests<br /><br /></li><li>Design for Windows tests<br /><br /></li><li>RPC tests<br /><br /></li><li>COM tests<br /><br /></li><li>Security tests<br /><br /></li><li>Encryption tests<br /><br /></li></p><ul xmlns=""><li class="unordered">
+Misc programming errors [MiscProgrammingErrors] <br /><br /></li><li class="unordered">
+Obsolete API calls [ObsoleteAPICalls] <br /><br /></li><li class="unordered">
+Registry usage [RegistryChecks] <br /><br /></li><li class="unordered">
+Early timer rollover [TimerRollover] <br /><br /></li><li class="unordered">
+DirectX file version [DXFileVersionInfo] <br /><br /></li><li class="unordered">
+Design For Windows<br /><br /></li></ul><p xmlns="">These may return in the future.</p></content></div><h2 class="heading">Application and System Requirements</h2><div id="sectionSection2" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">Remember, Application Verifier tests unmanaged code for 32 and 64 bit applications and will run on Microsoft Windows XP or greater. For more detailed information, please see <a href="83a6b108-eb3d-4233-a2e7-05384a582c53.htm">Application Verifier</a> Overview. </p><p xmlns="">Note: Although Application Verifier is for unmanaged code it does validate managed code to a degree due to many applications are mixed code (managed and unmanaged). However, the CLR does get verified.</p></content></div><h2 class="heading">Start Testing an Application</h2><div id="sectionSection3" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">To test an application you must first add the Application to the verifier tool. You can then select the tests you want enabled, save your test setup, and run your application. </p><p xmlns=""><b>To add an application to Application Verifier</b></p><ol class="ordered" xmlns=""><li>
+On the 
+    <b>File</b>
+   menu, select 
+    <b>Add Application</b>
+  .<br /><br /></li><li>
+Browse to the application and click 
+    <b>Open</b>
+  .<br /><br /></li></ol><p xmlns="">or</p><ol class="ordered" xmlns=""><li>
+Right click within the 
+    <b>Applications</b>
+   pane and select 
+    <b>Add Application</b>
+  .<br /><br /></li><li>
+Browse to the application and click 
+    <b>Open</b>
+  .<br /><br /></li></ol><p xmlns="">Note: After enabling the verifier for an executable file, all instances of that application on the system will be verified. </p><p xmlns=""><b>To select the tests to run</b></p><ul xmlns=""><li class="unordered">
+Select the checkbox next to the test you want to enable. <br /><br /></li></ul><p xmlns="">Selecting the checkbox next to a verification layer expands the list and selects all tests within the layer. You can then clear the tests you do not want to enable. </p><p xmlns=""><b>To enable all tests</b></p><ul xmlns=""><li class="unordered">
+On the 
+    <b>File</b>
+   menu, select 
+    <b>Enable All Tests</b>
+  . All test except 
+    <b>Low Resource Simulation</b>
+   will be enabled.<br /><br /></li></ul><p xmlns="">or</p><ul xmlns=""><li class="unordered">
+Right-click the application and select 
+    <b>Enable All Tests</b>
+  . All test except 
+    <b>Low Resource Simulation</b>
+   will be enabled.<br /><br /></li></ul><p xmlns="">Note: If you wish to apply tests to multiple applications, you must do so via the command line since multi-application-select is not available currently in the user interface.</p><p xmlns=""><b>To save your test setup</b></p><ul xmlns=""><li class="unordered">
+When the tests you want enabled have all been selected, click 
+    <b>Save</b>
+  .<br /><br /></li></ul><p xmlns="">or </p><ul xmlns=""><li class="unordered">
+On the 
+    <b>File</b>
+   menu, select 
+    <b>Save</b>
+  .<br /><br /></li></ul><p xmlns="">You may decide to close Application Verifier while running through your tests. Whether the Application Verifier user interface is open or closed, your application will be validated each time you run. </p><p xmlns="">The tests that were selected will check the code of the application running and the actions being taken in the application. These tests will generate logs for each application and will continue until the application is removed from the list of applications within Application Verifier. </p><p xmlns="">Note: to ensure good coverage of your application, run Application Verifier while performing all of your test cases. </p></content></div><h2 class="heading">Stop Testing an Application</h2><div id="sectionSection4" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">Your application will continue to be checked, even when Application Verifier is closed, until you remove the application name from the tool. </p><p xmlns=""><b>To remove an application from Application Verifier</b></p><ol class="ordered" xmlns=""><li>
+Select the name of the application<br /><br /></li><li>
+On the 
+    <b>File</b>
+   menu, select 
+    <b>Delete Application</b>
+  .<br /><br /></li><li>
+Click 
+    <b>Save</b>
+  . <br /><br /></li></ol><p xmlns="">Once you've made this change and saved the settings, the application will no longer run under Application Verifier. </p><p xmlns="">Note: by removing your application, it will not delete the logs that were previously generated. </p></content></div><h2 class="heading">Default tests</h2><div id="sectionSection5" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">When an application is added to Application Verifier to test, a set of tests are already selected to run. The Basics are the default tests.</p><p xmlns=""><b>To revert back to the default tests</b></p><ol class="ordered" xmlns=""><li>
+Select the application you want to change.<br /><br /></li><li>
+On the 
+    <b>File</b>
+   menu, select 
+    <b>Restore Defaults</b>
+  .<br /><br /></li></ol><p xmlns="">or</p><ul xmlns=""><li class="unordered">
+Right-click the application and select Restore Defaults.<br /><br /></li></ul></content></div><h2 class="heading">Setting up a Debugger</h2><div id="sectionSection6" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">The Basics verification layer within Application Verifier requires the application to be run under a debugger. </p><p xmlns="">Before Application Verifier will allow you to save your settings when selecting one of these, it will provide a dialog reminding you that these tests require you to run under a debugger. <br />To obtain more information on how to run your application under a debugger, please refer the <a href="dc4ed59f-4670-4f54-9f32-fe985b1e0202.htm">Debugger install and setup</a> topic. </p></content></div><!--[if gte IE 5]>
+			<tool:tip element="languageFilterToolTip" avoidmouse="false"/>
+		<![endif]--></div><div id="footer"><p></p><hr></hr><br /><br /></div></div></body></html>

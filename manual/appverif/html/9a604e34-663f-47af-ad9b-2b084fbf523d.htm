@@ -1,0 +1,32 @@
+<html DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:tool="http://www.microsoft.com/tooltip"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=Windows-1252"></META><META NAME="save" CONTENT="history"></META><title>Attempt to use a closed PrintTicket provider handle (HPTPROVIDER)</title><link rel="stylesheet" type="text/css" href="../local/Classic.css"></link><script src="../local/script.js"></script></head><body><div><input type="hidden" id="userDataCache" class="userDataStyle"></input><input type="hidden" id="hiddenScrollOffset"></input></div><img id="dropDownImage" style="display:none; height:0; width:0;" src="../local/drpdown.gif"></img><img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="../local/drpdown_orange.gif"></img><img id="collapseImage" style="display:none; height:0; width:0;" src="../local/collapse.gif"></img><img id="expandImage" style="display:none; height:0; width:0;" src="../local/exp.gif"></img><img id="copyImage" style="display:none; height:0; width:0;" src="../local/copycode.gif"></img><img id="copyHoverImage" style="display:none; height:0; width:0;" src="../local/copycodeHighlight.gif"></img><div id="header"><table width="100%" id="topTable"><tr id="headerTableRow1"><td align="left"><span id="runningHeaderText"></span></td></tr><tr id="headerTableRow2"><td align="left"><span id="nsrTitle">Attempt to use a closed PrintTicket provider handle (HPTPROVIDER)</span></td></tr><tr id="headerTableRow3"><td></td></tr></table></div><div id="mainSection"><div id="mainBody"><div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div><p></p><h2 class="heading">Application Verifier break message</h2><div id="sectionSection0" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> Attempt to use a closed PrintTicket provider handle (HPTPROVIDER)</p></content></div><h2 class="heading">Probable cause</h2><div id="sectionSection1" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> A PrintTicket provider handle was used after it had been freed.</p></content></div><h2 class="heading">Troubleshooting steps</h2><div id="sectionSection2" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">The sample debugger output below illustrates the following troubleshooting steps:</p><ul xmlns=""><li class="unordered">
+To see the routine that tried to use the closed PrintTicket provider handler, dump the current stack trace by using the ‘k' command in the debugger. <br /><br /></li><li class="unordered">
+To dump the stack trace of the routine that closed the handle, use the dps command with the second parameter of the stop.<br /><br /></li></ul><div class="code" xmlns=""><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="../local/copycode.gif"></img>Copy Code</span></th></tr><tr><td colspan="2"><pre>=======================================
+VERIFIER STOP 0000A00E : pid 0xB0: Attempt to use a closed PrintTicket provider handle (HPTPROVIDER)
+
+        03216FE8 : HPTPROVIDER handle being accessed.
+        02F7BF48 : Stack trace of the closing. Use dps to dump the stack trace if it is not NULL.
+        00000000 : Not used.
+        00000000 : Not used.
+=======================================
+
+0:000&gt; k
+ChildEBP RetAddr
+001dfa58 7175385b ntdll!DbgBreakPoint
+001dfc5c 6eee4237 vrfcore!VerifierStopMessageEx+0x4bd
+001dfc90 6eee45f6 vfprint!CResourceUsageMgr&lt;HPTPROVIDER__ *,CHandleTracker_t&lt;HPTPROVIDER__ *&gt; &gt;::ClosedHandleCheck+0x49
+001dfd34 00143dc2 vfprint!VfPTCloseProvider+0x111
+001dfd44 00142edc UnitTestvfPrint!UseAfterClosePTProviderHandle+0x32 * !This routine tries to uses closed PrintTicket provider handle, a bug
+001dfe3c 001450b6 UnitTestvfPrint!wmain+0x3dc
+001dfe80 76413833 UnitTestvfPrint!__wmainCRTStartup+0x102
+001dfe8c 775fa9bd KERNEL32!BaseThreadInitThunk+0xe
+001dfecc 00000000 ntdll!_RtlUserThreadStart+0x23
+
+0:000&gt; dps 02F7BF48
+02f7bf48  6eeecc12 vfprint!CaptureStack+0x17
+02f7bf4c  6eee4533 vfprint!VfPTCloseProvider+0x4e
+02f7bf50  00143db9 UnitTestvfPrint!UseAfterClosePTProviderHandle+0x29 * !The routine that closes the PrintTicket provider handle
+02f7bf54  00142edc UnitTestvfPrint!wmain+0x3dc
+02f7bf58  001450b6 UnitTestvfPrint!__wmainCRTStartup+0x102
+02f7bf5c  76413833 KERNEL32!BaseThreadInitThunk+0xe</pre></td></tr></table></span></div><p xmlns="">02f7bf60  775fa9bd ntdll!_RtlUserThreadStart+0x23</p></content></div><h2 class="heading">Information displayed by Application Verifier</h2><div id="sectionSection3" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> Parameter 1 - HPTPROVIDER handle being accessed.</p><p xmlns="">Parameter 2 - Stack trace of the closing. Use dps to dump the stack trace if it is not NULL.</p><p xmlns="">Parameter 3 - Not used.</p><p xmlns="">Parameter 4 - Not used.</p></content></div><h2 class="heading">Additional information</h2><div id="sectionSection4" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> Test Layer: PrintAPI</p><p xmlns="">Stop code: 0000A00E</p><p xmlns="">Severity: Error</p><p xmlns="">One-time error: no</p><p xmlns="">Error report: Break</p><p xmlns="">Log to file: yes</p><p xmlns="">Create backtrace: yes</p></content></div><!--[if gte IE 5]>
+			<tool:tip element="languageFilterToolTip" avoidmouse="false"/>
+		<![endif]--></div><div id="footer"><p></p><hr></hr><br /><br /></div></div></body></html>

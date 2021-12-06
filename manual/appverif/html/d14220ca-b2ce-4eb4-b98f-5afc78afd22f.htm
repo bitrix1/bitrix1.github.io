@@ -1,0 +1,42 @@
+<html DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:tool="http://www.microsoft.com/tooltip"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=Windows-1252"></META><META NAME="save" CONTENT="history"></META><title>The plug-in driver closed the printer handle</title><link rel="stylesheet" type="text/css" href="../local/Classic.css"></link><script src="../local/script.js"></script></head><body><div><input type="hidden" id="userDataCache" class="userDataStyle"></input><input type="hidden" id="hiddenScrollOffset"></input></div><img id="dropDownImage" style="display:none; height:0; width:0;" src="../local/drpdown.gif"></img><img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="../local/drpdown_orange.gif"></img><img id="collapseImage" style="display:none; height:0; width:0;" src="../local/collapse.gif"></img><img id="expandImage" style="display:none; height:0; width:0;" src="../local/exp.gif"></img><img id="copyImage" style="display:none; height:0; width:0;" src="../local/copycode.gif"></img><img id="copyHoverImage" style="display:none; height:0; width:0;" src="../local/copycodeHighlight.gif"></img><div id="header"><table width="100%" id="topTable"><tr id="headerTableRow1"><td align="left"><span id="runningHeaderText"></span></td></tr><tr id="headerTableRow2"><td align="left"><span id="nsrTitle">The plug-in driver closed the printer handle</span></td></tr><tr id="headerTableRow3"><td></td></tr></table></div><div id="mainSection"><div id="mainBody"><div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div><p></p><h2 class="heading">Application Verifier break message</h2><div id="sectionSection0" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> The plug-in closed the printer handle</p></content></div><h2 class="heading">Probable cause</h2><div id="sectionSection1" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> The plug-in closed the printer handle that it received as input from the core driver. This violates the Windows Driver Kit (WDK) rules for a call from the core driver to the plug-in. Use dps on the second parameter of the stop in order to dump the stack trace of the routine that closed the handle.</p><p xmlns="">For example:</p><div class="code" xmlns=""><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="../local/copycode.gif"></img>Copy Code</span></th></tr><tr><td colspan="2"><pre>=======================================
+VERIFIER STOP 0000D006 : pid 0x1644: The plugin driver closed the printer handle. 
+00000000018F6898 : Printer handle that was closed.
+0000000001E733B0 : Stack trace of the closing. Use dps to dump the stack trace if it is not NULL.
+0000000000000000 : Not used.
+0000000000000000 : Not used.
+
+This verifier stop was caused by the GetSupportedVersions method in the plug-in module at C:\WINDOWS\system32\spool\DRIVERS\x64\3\PTPlug_GetSupVersions_1.dll
+=======================================
+0:000&gt; k
+Child-SP          RetAddr           Call Site
+00000000'000aefe8 00000000'01d032d5 ntdll!DbgBreakPoint
+00000000'000aeff0 00000000'01d49b98 vrfcore!VerifierStopMessageEx+0x5f5
+00000000'000af2c0 00000000'01d3829e vfprint!CPrintVerifierCommonDriverHelper::PluginClosedPrinterHandleCheck+0xb8
+00000000'000af330 00000000'4f4d3d31 vfprint!CPrintVerifierPrintTicketProvider::GetSupportedVersions+0x10e
+00000000'000af3a0 00000000'01f05f31 UNIDRVUI!CPrintTicketProvider::GetSupportedVersions+0x1e1
+00000000'000af480 00000000'01f05a07 prntvpt!PTOpenProviderExImp+0x471
+00000000'000af620 00000000'01efe93c prntvpt!PTOpenProviderImp+0x97
+00000000'000af6b0 00000000'01f02cc5 prntvpt!CPrintTicketServerBase::Bind+0x3c
+00000000'000af6f0 00000000'01d47e57 prntvpt!PTOpenProvider+0x1c5
+00000000'000af7b0 00000001'0000e87f vfprint!VfPTOpenProvider+0x97
+00000000'000af810 00000001'00008ce5 ptutil!PTUGetDefaultTicket&lt;_PRINTER_INFO_9W,9&gt;+0x11f
+00000000'000afcb0 00000001'000304b0 ptutil!main+0x205
+00000000'000aff20 00000000'78d5965c ptutil!__tmainCRTStartup+0x144
+00000000'000aff80 00000000'00000000 KERNEL32!BaseProcessStart+0x29
+
+0:000&gt; dps 0000000001E733B0 
+00000000'01e733b0  00000000'01d34441 vfprint!VfHookClosePrinter+0x71
+00000000'01e733b8  00000000'50010c57 PTPlug_GetSupVersions_1!COemPrintTicketProvider::GetSupportedVersions+0xa7    &lt;-------- Code that closed the handle
+00000000'01e733c0  00000000'01d3821c vfprint!CPrintVerifierPrintTicketProvider::GetSupportedVersions+0x8c
+00000000'01e733c8  00000000'4f4d3d31 UNIDRVUI!CPrintTicketProvider::GetSupportedVersions+0x1e1
+00000000'01e733d0  00000000'01f05f31 prntvpt!PTOpenProviderExImp+0x471
+00000000'01e733d8  00000000'01f05a07 prntvpt!PTOpenProviderImp+0x97
+00000000'01e733e0  00000000'01efe93c prntvpt!CPrintTicketServerBase::Bind+0x3c
+00000000'01e733e8  00000000'01f02cc5 prntvpt!PTOpenProvider+0x1c5
+00000000'01e733f0  00000000'01d47e57 vfprint!VfPTOpenProvider+0x97
+00000000'01e733f8  00000001'0000e87f ptutil!PTUGetDefaultTicket&lt;_PRINTER_INFO_9W,9&gt;+0x11f
+00000000'01e73400  00000001'00008ce5 ptutil!main+0x205
+00000000'01e73408  00000001'000304b0 ptutil!__tmainCRTStartup+0x144
+00000000'01e73410  00000000'78d5965c KERNEL32!BaseProcessStart+0x29</pre></td></tr></table></span></div></content></div><h2 class="heading">Information displayed by Application Verifier</h2><div id="sectionSection2" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> Format: - This verifier stop was caused by the %lS method in the plug-in module at %lS</p><p xmlns="">Parameter 1 - Printer handle that was closed.</p><p xmlns="">Parameter 2 - Stack trace of the closing. Use dps to dump the stack trace if it is not NULL.</p><p xmlns="">Parameter 3 - Not used.</p><p xmlns="">Parameter 4 - Not used.</p></content></div><h2 class="heading">Additional information</h2><div id="sectionSection3" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> Test Layer: PrintDriver</p><p xmlns="">Stop code: 0000D006</p><p xmlns="">Severity: Error</p><p xmlns="">One-time error: no</p><p xmlns="">Error report: Break</p><p xmlns="">Log to file: yes</p><p xmlns="">Create backtrace: yes</p></content></div><!--[if gte IE 5]>
+			<tool:tip element="languageFilterToolTip" avoidmouse="false"/>
+		<![endif]--></div><div id="footer"><p></p><hr></hr><br /><br /></div></div></body></html>

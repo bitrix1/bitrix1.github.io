@@ -1,0 +1,77 @@
+<html DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:tool="http://www.microsoft.com/tooltip"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=Windows-1252"></META><META NAME="save" CONTENT="history"></META><title>How to use Application Verifier</title><link rel="stylesheet" type="text/css" href="../local/Classic.css"></link><script src="../local/script.js"></script></head><body><div><input type="hidden" id="userDataCache" class="userDataStyle"></input><input type="hidden" id="hiddenScrollOffset"></input></div><img id="dropDownImage" style="display:none; height:0; width:0;" src="../local/drpdown.gif"></img><img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="../local/drpdown_orange.gif"></img><img id="collapseImage" style="display:none; height:0; width:0;" src="../local/collapse.gif"></img><img id="expandImage" style="display:none; height:0; width:0;" src="../local/exp.gif"></img><img id="copyImage" style="display:none; height:0; width:0;" src="../local/copycode.gif"></img><img id="copyHoverImage" style="display:none; height:0; width:0;" src="../local/copycodeHighlight.gif"></img><div id="header"><table width="100%" id="topTable"><tr id="headerTableRow1"><td align="left"><span id="runningHeaderText"></span></td></tr><tr id="headerTableRow2"><td align="left"><span id="nsrTitle">How to use Application Verifier</span></td></tr><tr id="headerTableRow3"><td></td></tr></table></div><div id="mainSection"><div id="mainBody"><div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div><p>You should use Application Verifier throughout your Software Development Lifecycle (SDL also referred to as the Security Development Lifecycle):</p><ul><li class="unordered"><b>Requirements Phase</b>
+   - AppVerifier should be planned and time allocated for its execution and follow up.<br /><br /></li><li class="unordered"><b>Design Phase</b>
+   - Plan for the use of Application Verifier and define which components (modules, DLLs or EXEs) will be tested.<br /><br /></li><li class="unordered"><b>Implementation Phase</b>
+   - Run Application Verifier on stable builds (from Alpha to RTM) of the different components under development (it is important to test the components individually and collectively).<br /><br /></li><li class="unordered"><b>Verification Phase</b>
+   - Testers should execute all of their tests (both manual and automatic) with Application Verifier since this will be the first time that the application will be pushed to the limits and unexpected behavior and data will be submitted. AppVerifier is also a powerful tool for security consultants doing audits (black box and white box) since it will allow the quick enumeration of real (or potential) attack/exploit vectors. <br /><br /></li><li class="unordered"><b>Release Phase</b>
+   - Clients and security consultants can use AppVerifier on the released binaries to identify potential security vulnerabilities. <br /><br /></li><li class="unordered"><b>Support and Servicing Phase</b>
+   - Use Application Verifier to ensure that code changes (e.g. updates, service packs) do not introduce regressions.<br /><br /></li><li class="unordered">
+						For more information, please see the published whitepaper on MSDN: http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnsecure/html/appverifier_sdl.asp.<br /><br /></li></ul><h2 class="heading">Installing and configuring</h2><div id="sectionSection0" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><ol class="ordered" xmlns=""><li>
+							Install: Download the latest version of Application Verifier from <a href="http://www.microsoft.com/technet/prodtechnol/windows/appcompatibility/appverifier.mspx" target="_blank" class="external" alt="">http://www.microsoft.com/technet/prodtechnol/windows/appcompatibility/appverifier.mspx</a> where you will find setup binaries for the supported architectures: x86, ia64, amd64. <br /><br /></li><li>
+							Debugger setup: The application being verified should run under a user-mode debugger or the system should run under a kernel debugger since it will break into a debugger when an error occurs. Please see the Application Verifier help contents for more debugger details. <br /><br /></li><li>
+							Settings: Application Verifier cannot be enabled for a running process. As a result, you need to make settings as described below and then start the application. The settings are persistent until explicitly deleted. Therefore, no matter how many times you launch an application it will start with AppVerifier enabled until the settings are deleted.<br /><br /></li></ol></content></div><h2 class="heading">Using Application Verifier with WOW64</h2><div id="sectionSection1" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">In Windows 7, you can use either the 32-bit or the 64-bit version of Application Verifier to verify a 32-bit application running under WOW64.</p><p xmlns="">In Windows Vista and earlier operating systems, you should use the 32-bit version of Application Verifier to verify 32-bit applications, and you should use the 64-bit version of Application Verifier to verify 64-bit applications.</p><p xmlns="">In Windows Vista and earlier operating systems, be sure that 32-bit applications are enabled only in  the 32-bit version of Application Verifier. That is, do not enable a given 32-bit application in both the 32-bit and 64-bit versions of Application Verifier. </p></content></div><h2 class="heading">Using Application Verifier Basics Test</h2><div id="sectionSection2" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">The scenarios below showcase the recommended command line and user interface options. These should be run during all tests that exercise the code to ensure complete coverage. The expectation for these scenarios is that application does not break into debugger and all tests pass with the same pass rate as when run without AppVerifier enabled.</p><ol class="ordered" xmlns=""><li>
+							Enable verifier for the application(s) you wish to test using. From the command line: 
+    <b>appverif /verify MyApp.exe. </b>
+  From the user interface: Add your application by right clicking within the 
+    <b>Applications</b>
+   area and selecting 
+    <b>Add Application</b>
+  . Select the 
+    <b>Basics</b>
+   from the 
+    <b>Tests</b>
+   area. Click the 
+    <b>Save</b>
+   button. <br /><br /></li></ol><p xmlns="">Notes: </p><ul xmlns=""><li class="unordered">
+							/verify will enable the basics tests<br /><br /></li><li class="unordered">
+							If you are testing a DLL, Application Verifier has to be enabled for the test executable that is exercising the DLL.<br /><br /></li><li class="unordered">
+							Run the verification layers separately. For example, in one session enable all Basics and on another one enable all LuaPriv checks.<br /><br /></li></ul><ol class="ordered" xmlns=""><li>
+							Run ALL your tests exercising the application.<br /><br /></li><li>
+							Analyze any debugger break(s) encountered. If a break occurs you will need to understand it and fix it. NOTE: The help contents provide details on the breaks and how to investigate them.<br /><br /></li><li>
+							When finished, delete all settings. From the command line: 
+    <b>appverif /n MyApp.exe. </b>
+  From the user interface:<br /><br /></li></ol><ul xmlns=""><li class="unordered">
+							Remove your application by right clicking within the 
+    <b>Applications</b>
+   area and selecting 
+    <b>Delete Application</b><br /><br /></li><li class="unordered">
+							Click the 
+    <b>Save </b>
+  button.<br /><br /></li></ul></content></div><h2 class="heading">Using AppVerifier Low Resource Simulation (fault injection)</h2><div id="sectionSection3" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">The expectation for this scenario is that the application does not break into debugger. By not breaking into the debugger means that you have no errors that need to be addressed.</p><p xmlns="">The pass rate for the tests may decrease significantly since random fault injections are introduced into the normal operation.</p><ol class="ordered" xmlns=""><li>
+							Enable Application Verifier 
+    <b>Low Resource Simulation</b>
+   (fault injection) for the application(s). From the command line: 
+    <b>Appverif /verify MyApp.exe /faults</b>
+  . From the user interface: Add your application by right clicking within the 
+    <b>Applications</b>
+   area and selecting 
+    <b>Add Application</b>
+  . Select the 
+    <b>Low Resource Simulation</b>
+   from the 
+    <b>Tests</b>
+   area. Click the 
+    <b>Save</b>
+   button.<br /><br />
+							Note: If you are testing a DLL, you can apply low resource simulation (fault injection) on a certain DLL instead of the whole process. The command line format would be: 
+    <b>appverif /verify TARGET [/faults [PROBABILITY [TIMEOUT [DLL …]]]]</b><br /><br />
+							Example: appverif /verify mytest.exe /faults 50000 1000 d3d9.dll<br /><br /></li><li>
+							Run ALL your tests exercising the application<br /><br /></li><li>
+							Analyze any debugger break(s) encountered. If a break occurs you will need to understand it and fix it.<br /><br /></li><li>
+							When finished, delete all settings. From the command line: 
+    <b>appverif /n MyApp.exe. </b>
+  From the user interface: remove your application by right clicking within the 
+    <b>Applications</b>
+   area and selecting 
+    <b>Delete Application</b>
+  , clicking the 
+    <b>Save</b>
+   button.<br /><br /></li><li>
+							Note: Running with and without fault injection exercises largely different code paths in an application and therefore both scenarios must be run in order to get the full benefit of AppVerifier.<br /><br /></li></ol></content></div><h2 class="heading">Analyzing AppVerifier Data</h2><div id="sectionSection4" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><ul xmlns=""><li class="unordered">
+							All data created during AppVerifier analysis is stored in the %USERPROFILE%\AppVerifierLogs folder in a binary format. These logs can then be converted to XML via the user interface or command line for further analysis. <br /><br /></li><li class="unordered">
+							To view the XML files, you can use of one of the following techniques:<br /><br /></li><li class="unordered">
+							Web Browser – All modern web browsers are able to display XML files in a structured and color-coded format.<br /><br /></li><li class="unordered">
+							Using XSL Transformations – Create an XSLT which converts the raw XML content into reports containing only information relevant to you.<br /><br /></li><li class="unordered">
+							Import into Microsoft Excel - Import the XML file into Excel and use filters or Pivot Tables to reorganize and analyze the collected data.<br /><br /></li><li class="unordered">
+							Import into Database – Save the XML files and import them into a SQL, Access, etc. database.<br /><br /></li></ul></content></div><!--[if gte IE 5]>
+			<tool:tip element="languageFilterToolTip" avoidmouse="false"/>
+		<![endif]--></div><div id="footer"><p></p><hr></hr><br /><br /></div></div></body></html>

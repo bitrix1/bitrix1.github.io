@@ -1,0 +1,103 @@
+<html DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:tool="http://www.microsoft.com/tooltip"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=Windows-1252"></META><META NAME="save" CONTENT="history"></META><title>Net Verification Layer</title><link rel="stylesheet" type="text/css" href="../local/Classic.css"></link><script src="../local/script.js"></script></head><body><div><input type="hidden" id="userDataCache" class="userDataStyle"></input><input type="hidden" id="hiddenScrollOffset"></input></div><img id="dropDownImage" style="display:none; height:0; width:0;" src="../local/drpdown.gif"></img><img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="../local/drpdown_orange.gif"></img><img id="collapseImage" style="display:none; height:0; width:0;" src="../local/collapse.gif"></img><img id="expandImage" style="display:none; height:0; width:0;" src="../local/exp.gif"></img><img id="copyImage" style="display:none; height:0; width:0;" src="../local/copycode.gif"></img><img id="copyHoverImage" style="display:none; height:0; width:0;" src="../local/copycodeHighlight.gif"></img><div id="header"><table width="100%" id="topTable"><tr id="headerTableRow1"><td align="left"><span id="runningHeaderText"></span></td></tr><tr id="headerTableRow2"><td align="left"><span id="nsrTitle">Net Verification Layer</span></td></tr><tr id="headerTableRow3"><td></td></tr></table></div><div id="mainSection"><div id="mainBody"><div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div><p></p><h2 class="heading">Properties</h2><div id="sectionSection0" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">The following properties are available for the Net verification layer. To set the properties, select the Networking provider in the Application Verifier user interface, and open the <a href="c9ee7540-ea04-4454-8f75-c6de35c8321f.htm">Property Window</a>.</p><h3 class="subHeading" xmlns=""></h3><table xmlns=""><tr><th>
+									Property
+								</th><th>
+									Description
+								</th></tr><tr><td><p>FragmentsEnabled</p></td><td><p>Enables the fragmenting of data streams received by TCP IPv4 and IPv6 sockets.</p></td></tr><tr><td><p>FragmentSize</p></td><td><p>Specifies the maximum number of bytes returned into a buffer to any Winsock receive API call.</p></td></tr></table><p xmlns="">The 
+    <b>FragmentsEnabled</b>
+   property enables functionality in the Networking verifier provider to facilitate testing and verification of an application parsing TCP streams off of a network. Once enabled, all calls to Winsock to receive data will only receive up to 
+    <b>FragmentSize</b>
+   bytes unless the application specifically requires the entire buffer filled before returning (controlled by the MSG_WAITALL flag). Since neither the TCP protocol nor Winsock provide any guarantees about the number of bytes possibly returned into a buffer, enabling this check will facilitate verifying that the code parsing the stream of data off of the network does so correctly, independently of the number of bytes received per call to Winsock. Issues in stream parsers have been a source of high-profile bugs, and these properties are provided to ease verification of correctness, as this is particularly difficult to test. 
+    <b>Note:</b>
+   This does not change the data returned – it only slows it down at a specific rate: the application should behave exactly same fashion with this enabled or disabled.</p><p xmlns="">The following command line enables the fragmentation of all incoming TCP streams to all TCP IPv4 and IPv6 sockets created in myApp.exe and all binaries loaded by myApp.exe.</p><div class="code" xmlns=""><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="../local/copycode.gif"></img>Copy Code</span></th></tr><tr><td colspan="2"><pre>appverif -enable Networking -for myApp.exe -with Networking.FragmentsEnabled=True Networking.FragmentSize=10</pre></td></tr></table></span></div></content></div><h2 class="heading">!avrf Debugger Extension</h2><div id="sectionSection1" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">!avrf -net -socket count                displays open and closed socket handle count</p><p xmlns="">!avrf -net -socket dump [-v] [HANDLE]   displays socket handle(s), verbosely or not.</p><p xmlns="">!avrf -net -wsastacks                   displays the current WSA init count and chronological list of stack traces for WSAStartup/WSACleanup.</p><p xmlns="">!avrf -net -wsastacks count      displays the current WSA init count.</p><p xmlns=""><b>!avrf -net -socket count</b></p><p xmlns="">This command will give the overall number of socket handles that are being tracked, both opened and closed.  Note that these are tracked in a circular queue, so there is a ceiling to the total being tracked.  Sockets are added to the opened list when one of the Winsock APIs which allocates a socket handle is called. For example, socket(), WSASocket(), accept().  Sockets are moved from the opened list to the closed list when the closesocket() function is called on that socket handle.</p><p xmlns=""><b>!avrf -net -socket dump [-v] [HANDLE]</b></p><p xmlns="">This command will enumerate the socket handles.  "-socket dump" will list all tracked opened and closed socket handles by their SOCKET values.  The optional -v flag will additionally print the open or close call stack immediately after printing each SOCKET value.  The optional HANDLE field will list only the specified SOCKET handle and its open or close call stack.</p><p xmlns="">Here are example of the various -socket usage options:</p><div class="code" xmlns=""><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="../local/copycode.gif"></img>Copy Code</span></th></tr><tr><td colspan="2"><pre>0:008&gt; !avrf -net -socket count
+Number of open socket handles   = 16
+Number of closed socket handles = 12
+ 
+0:008&gt; !avrf -net -socket dump
+CLOSED SOCKET HANDLE - 0x47c
+CLOSED SOCKET HANDLE - 0x2cc
+CLOSED SOCKET HANDLE - 0x8c4
+CLOSED SOCKET HANDLE - 0x6bc
+CLOSED SOCKET HANDLE - 0x44c
+CLOSED SOCKET HANDLE - 0x578
+CLOSED SOCKET HANDLE - 0x6f4
+CLOSED SOCKET HANDLE - 0x5b4
+CLOSED SOCKET HANDLE - 0x4d8
+CLOSED SOCKET HANDLE - 0x3cc
+CLOSED SOCKET HANDLE - 0x4fc
+CLOSED SOCKET HANDLE - 0x4e0
+OPEN SOCKET HANDLE - 0xfd4
+OPEN SOCKET HANDLE - 0x7d8
+OPEN SOCKET HANDLE - 0xf8c
+OPEN SOCKET HANDLE - 0xf88
+OPEN SOCKET HANDLE - 0xae0
+OPEN SOCKET HANDLE - 0xe58
+OPEN SOCKET HANDLE - 0xdfc
+OPEN SOCKET HANDLE - 0xcf8
+OPEN SOCKET HANDLE - 0xa18
+OPEN SOCKET HANDLE - 0x7a0
+OPEN SOCKET HANDLE - 0x7b0
+OPEN SOCKET HANDLE - 0x534
+OPEN SOCKET HANDLE - 0xcdc
+OPEN SOCKET HANDLE - 0x1f0
+OPEN SOCKET HANDLE - 0x444
+OPEN SOCKET HANDLE - 0x8bc
+ 
+0:008&gt; !avrf -net -socket dump -v 0x47c
+ 
+The socket handle is closed
+ 
+vfNet!VfHookclosesocket
+WININET!ICSocket::_UnSafeCloseSocket
+WININET!ICSocket::Dereference
+WININET!CFsm_GetConnection::RunSM
+WININET!CFsm::Run
+WININET!DoFsm
+WININET!HTTP_REQUEST_HANDLE_OBJECT::OpenConnection_Fsm
+WININET!CFsm_OpenConnection::RunSM
+WININET!CFsm::Run
+WININET!DoFsm
+WININET!HTTP_REQUEST_HANDLE_OBJECT::OpenConnection
+WININET!HTTP_REQUEST_HANDLE_OBJECT::MakeConnection_Fsm
+WININET!CFsm_MakeConnection::RunSM
+WININET!CFsm::Run
+WININET!DoFsm
+WININET!HTTP_REQUEST_HANDLE_OBJECT::SendRequest_Fsm
+WININET!CFsm_SendRequest::RunSM
+WININET!CFsm::Run
+WININET!DoFsm
+WININET!HTTP_REQUEST_HANDLE_OBJECT::HttpSendRequest_Start
+WININET!CFsm_HttpSendRequest::RunSM
+WININET!CFsm::Run
+WININET!CFsm::RunWorkItem
+SHLWAPI!ExecuteWorkItemThreadProc
+vfbasics!AVrfpRtlWorkerCallback
+ntdll!RtlpTpWorkCallback
+ntdll!TppWorkerThread
+kernel32!BaseThreadInitThunk
+ntdll!__RtlUserThreadStart
+ntdll!_RtlUserThreadStart</pre></td></tr></table></span></div><p xmlns=""><b>!avrf -net -wsastacks [count]</b></p><p xmlns="">[background] Winsock requires application developers to call the WSAStartup() at least once before making any Winsock calls.  This is tracked by Winsock process-wide.  The initial reference count instructs a Winsock library (ws2_32.dll) to initialize and load the Winsock catalog and providers.  Further calls to WSAStartup increments that reference count.  Winsock also requires application developers to call WSACleanup() when they have 'finished'calling into Winsock.  The calls to WSACleanup must be paired correctly with a prior call to WSAStartup().  The call to WSACleanup() decrements the process-wide reference count.  When the reference count falls to zero, Winsock releases its resources and unloads the Winsock catalog and providers.</p><p xmlns="">This command will give the overall reference count value of the current "WSAStartup" initialization routine and lists the call stacks to calls to WSAStartup and WSACleanup made within the process.  Note that this is maintained within a fixed circular queue, so it is not guaranteed to be complete - only the N most recent calls.</p><p xmlns="">Here are example of the various -wsastacks usage options:</p><div class="code" xmlns=""><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="../local/copycode.gif"></img>Copy Code</span></th></tr><tr><td colspan="2"><pre>0:008&gt; !avrf -net -wsastacks count
+ 
+Current WSARefCount: 1 (WSAStartup call count minus WSACleanup call count for the target process)
+ 
+ 
+0:008&gt; !avrf -net -wsastacks
+ 
+Current WSARefCount: 1 (WSAStartup call count minus WSACleanup call count for the target process)
+ 
+ 
+THREAD ID: 0xe4c called WSAStartup
+vfNet!WSAInitStacks&lt;NetAllocatorViaPrivateHeap&gt;::AddWSAStackTrace
+vfNet!VfHookWSAStartup
+WININET!LoadWinsock
+WININET!GlobalDataInitialize
+WININET!InternetSetOptionA
+WININET!InternetSetOptionW
+IEFRAME!LCIEUpdateSessionStartTime
+IEFRAME!LCIETab_ThreadProc
+iertutil!_IsoThreadProc
+vfbasics!AVrfpStandardThreadFunction
+kernel32!BaseThreadInitThunk
+ntdll!__RtlUserThreadStart
+ntdll!_RtlUserThreadStart</pre></td></tr></table></span></div></content><sections xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"></sections></div><!--[if gte IE 5]>
+			<tool:tip element="languageFilterToolTip" avoidmouse="false"/>
+		<![endif]--></div><div id="footer"><p></p><hr></hr><br /><br /></div></div></body></html>

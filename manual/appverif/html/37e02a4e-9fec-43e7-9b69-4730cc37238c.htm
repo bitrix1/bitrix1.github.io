@@ -1,0 +1,68 @@
+<html DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:tool="http://www.microsoft.com/tooltip"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=Windows-1252"></META><META NAME="save" CONTENT="history"></META><title>Race condition detected while using a printer handle</title><link rel="stylesheet" type="text/css" href="../local/Classic.css"></link><script src="../local/script.js"></script></head><body><div><input type="hidden" id="userDataCache" class="userDataStyle"></input><input type="hidden" id="hiddenScrollOffset"></input></div><img id="dropDownImage" style="display:none; height:0; width:0;" src="../local/drpdown.gif"></img><img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="../local/drpdown_orange.gif"></img><img id="collapseImage" style="display:none; height:0; width:0;" src="../local/collapse.gif"></img><img id="expandImage" style="display:none; height:0; width:0;" src="../local/exp.gif"></img><img id="copyImage" style="display:none; height:0; width:0;" src="../local/copycode.gif"></img><img id="copyHoverImage" style="display:none; height:0; width:0;" src="../local/copycodeHighlight.gif"></img><div id="header"><table width="100%" id="topTable"><tr id="headerTableRow1"><td align="left"><span id="runningHeaderText"></span></td></tr><tr id="headerTableRow2"><td align="left"><span id="nsrTitle">Race condition detected while using a printer handle</span></td></tr><tr id="headerTableRow3"><td></td></tr></table></div><div id="mainSection"><div id="mainBody"><div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div><p></p><h2 class="heading">Application Verifier break message</h2><div id="sectionSection0" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> Race condition detected while using a printer handle</p></content></div><h2 class="heading">Probable cause</h2><div id="sectionSection1" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> A printer handle is being used concurrently in multiple threads.</p><p xmlns="">Printer handles are not thread safe which means that simultaneous use of a printer handle in multiple threads is not permitted without application-level synchronization to safely coordinate access to the handle. The application should either open a separate printer handle in each thread or provide custom synchronization access to the printer handle by using the Microsoft Win32 synchronization API.</p><p xmlns="">The Win32 synchronization API is described further at <a href="http://go.microsoft.com/fwlink/?LinkId=68570" target="_blank" class="external" alt="">http://go.microsoft.com/fwlink/?LinkId=68570</a>.</p></content></div><h2 class="heading">Troubleshooting steps</h2><div id="sectionSection2" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">The sample debugger output below illustrates the following troubleshooting steps:</p><ul xmlns=""><li class="unordered">
+Verify the stack trace of each thread that used that printer handle by using the k command. These threads are described by parameters 2 and 3 of the Verifier Stop.<br /><br /></li><li class="unordered">
+Dump the stack trace for each suspected thread and locate the routine that accessed the printer handle<br /><br /></li><li class="unordered">
+Review the source code of the suspected routines to identify what allowed the concurrent access.<br /><br /></li></ul><div class="code" xmlns=""><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="../local/copycode.gif"></img>Copy Code</span></th></tr><tr><td colspan="2"><pre>=======================================
+VERIFIER STOP 0000A003 : pid 0xAB4: Race condition detected while using a printer handle
+
+        078EAF84 : Printer handle being accessed.
+        0000098C : Current thread id.
+        00000944 : Thread id of the concurrent thread.
+        00000002 : Concurrency count.
+=======================================
+
+* List the threads:
+*    thread id 98C is the current thread, Param 2 (Note “.” denotes current thread)
+*    thread id 944 in the concurrent thread, Param 3
+
+0:002&gt; ~
+   0  Id: ab4.2c0 Suspend: 1 Teb: 7ffde000 Unfrozen
+   1  Id: ab4.b24 Suspend: 1 Teb: 7ffdd000 Unfrozen
+.  2  Id: ab4.98c Suspend: 1 Teb: 7ffdc000 Unfrozen*Suspect thread #1
+   3  Id: ab4.944 Suspend: 1 Teb: 7ffdb000 Unfrozen*Suspect thread #2
+   4  Id: ab4.8d4 Suspend: 1 Teb: 7ffd9000 Unfrozen
+   5  Id: ab4.bcc Suspend: 1 Teb: 7ffda000 Unfrozen
+   7  Id: ab4.ca4 Suspend: 1 Teb: 7ffd7000 Unfrozen
+   8  Id: ab4.e6c Suspend: 1 Teb: 7ffd6000 Unfrozen
+
+* The debugger is on the 2nd thread as indicated by the 0:002&gt; command prompt
+* Use the k command to dump the stack of this thread or use the ~2s command to 
+*   change threads
+
+0:002&gt; k
+ChildEBP RetAddr
+04d0da3c 73de3855 ntdll!DbgBreakPoint
+04d0dc40 73cf625e vrfcore!VerifierStopMessageEx+0x4bd
+04d0dc64 73cf70f7 vfprint!CHandleTracker_t&lt;void *&gt;::CheckConcurentUse+0x34
+04d0dc7c 73cf7caa vfprint!CResourceUsageMgr&lt;void *,CHandleTracker_t&lt;void *&gt; &gt;::PreHandleApiCallHelper+0x2a
+04d0dc98 00a5ce5c vfprint!VfHookWritePrinter+0x33
+04d0dcb0 00a70779 PrintFilterPipelineSvc!SplReadWrite::SequentialSpoolReaderWriter::Write+0x26 *Suspect routine
+04d0dccc 00a63193 PrintFilterPipelineSvc!XpsStreamToPipelineStream::Receive+0x1f
+
+* Switch to concurrent thread, 3 in this case, by using the ~ thread command
+0:003&gt; ~3s
+eax=c0c0c0c0 ebx=0a344ef4 ecx=00000008 edx=00000000 esi=06110eb0 edi=0a344e88
+eip=77c2d804 esp=042ef29c ebp=042ef2c8 iopl=0         nv up ei pl zr na pe nc
+cs=001b  ss=0023  ds=0023  es=0023  fs=003b  gs=0000             efl=00000246
+ntdll!KiFastSystemCallRet:
+77c2d804 c3              ret
+
+* and dump the stack of the concurrent thread by using the k command
+0:005&gt; k
+ChildEBP RetAddr
+042ef298 77c2bbbc ntdll!KiFastSystemCallRet
+042ef29c 77717df9 ntdll!ZwAlpcSendWaitReceivePort+0xc
+042ef2c8 7770396d RPCRT4!LRPC_CASSOCIATION::AlpcSendWaitReceivePort+0x24
+042ef304 77786b13 RPCRT4!LRPC_CCALL::SendReceive+0x177
+042ef314 7779221f RPCRT4!LRPC_CCALL_AVRF::SendReceive+0x26
+042ef800 7136680a RPCRT4!NdrClientCall2+0xc49
+042ef81c 7135ced1 WINSPOOL!RpcEndDocPrinter+0x1a
+042ef860 73cf7fd4 WINSPOOL!EndDocPrinter+0xed
+042ef878 00a5a61a vfprint!VfHookEndDocPrinter+0x36
+042ef890 00a5a808  PrintFilterPipelineSvc!SplPipeline::SplFilterPipelineCallObject::CleanSpoolerHandles+0x3e *Suspect routine
+042ef8a4 77c0fdbd PrintFilterPipelineSvc!SplPipeline::SplFilterPipelineCallObject::CallSignalInMtaThread+0x25
+042ef908 77c36b1c ntdll!RtlpTpWorkCallback+0xbf
+042efa30 765a333d ntdll!TppWorkerThread+0x522
+042efa3c 77c0a8d5 KERNEL32!BaseThreadInitThunk+0xe
+042efa7c 00000000 ntdll!_RtlUserThreadStart+0x23</pre></td></tr></table></span></div></content></div><h2 class="heading">Information displayed by Application Verifier</h2><div id="sectionSection3" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> Parameter 1 - Printer handle being accessed. </p><p xmlns="">Parameter 2 - Current thread id. </p><p xmlns="">Parameter 3 - Thread id of the concurrent thread. </p><p xmlns="">Parameter 4 - Concurrency count. </p></content></div><h2 class="heading">Additional information</h2><div id="sectionSection4" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> Test Layer: PrintAPI</p><p xmlns="">Stop code: 0000A003</p><p xmlns="">Severity: Error</p><p xmlns="">One-time error: no</p><p xmlns="">Error report: Break</p><p xmlns="">Log to file: yes</p><p xmlns="">Create backtrace: yes</p></content></div><!--[if gte IE 5]>
+			<tool:tip element="languageFilterToolTip" avoidmouse="false"/>
+		<![endif]--></div><div id="footer"><p></p><hr></hr><br /><br /></div></div></body></html>

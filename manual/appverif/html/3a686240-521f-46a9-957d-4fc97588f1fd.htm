@@ -1,0 +1,24 @@
+<html DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:tool="http://www.microsoft.com/tooltip"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=Windows-1252"></META><META NAME="save" CONTENT="history"></META><title>Attempt to use an unknown spool file handle</title><link rel="stylesheet" type="text/css" href="../local/Classic.css"></link><script src="../local/script.js"></script></head><body><div><input type="hidden" id="userDataCache" class="userDataStyle"></input><input type="hidden" id="hiddenScrollOffset"></input></div><img id="dropDownImage" style="display:none; height:0; width:0;" src="../local/drpdown.gif"></img><img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="../local/drpdown_orange.gif"></img><img id="collapseImage" style="display:none; height:0; width:0;" src="../local/collapse.gif"></img><img id="expandImage" style="display:none; height:0; width:0;" src="../local/exp.gif"></img><img id="copyImage" style="display:none; height:0; width:0;" src="../local/copycode.gif"></img><img id="copyHoverImage" style="display:none; height:0; width:0;" src="../local/copycodeHighlight.gif"></img><div id="header"><table width="100%" id="topTable"><tr id="headerTableRow1"><td align="left"><span id="runningHeaderText"></span></td></tr><tr id="headerTableRow2"><td align="left"><span id="nsrTitle">Attempt to use an unknown spool file handle</span></td></tr><tr id="headerTableRow3"><td></td></tr></table></div><div id="mainSection"><div id="mainBody"><div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div><p></p><h2 class="heading">Application Verifier break message</h2><div id="sectionSection0" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> Attempt to use an unknown spool file handle</p></content></div><h2 class="heading">Probable cause</h2><div id="sectionSection1" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> An attempt was made to use a spool file handle that was not opened by calling GetSpoolFileHandle or CommitSpoolData. </p></content></div><h2 class="heading">Troubleshooting steps</h2><div id="sectionSection2" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">Use the 'k' command in the debugger to see the stack trace of the routine that attempted this action as shown in the following sample debugger output.</p><div class="code" xmlns=""><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="../local/copycode.gif"></img>Copy Code</span></th></tr><tr><td colspan="2"><pre>=======================================
+VERIFIER STOP 0000A01C : pid 0xA94: Attempt to use an unknown spool file handle
+
+        00000000 : Handle being accessed.
+        00000000 : Not used.
+        00000000 : Not used.
+        00000000 : Not used.
+=======================================
+
+0:000&gt; k
+ChildEBP RetAddr
+0012fa44 7386385b ntdll!DbgBreakPoint
+0012fc48 6fe38d5a vrfcore!VerifierStopMessageEx+0x4bd
+0012fc7c 6fe39841 vfprint!CResourceUsageMgr&lt;void *,CSpoolFileTracker&gt;::ClosedHandleCheck+0x70
+*** WARNING: Unable to verify checksum for Test.exe
+0012fc98 004170e3 vfprint!VfHookCloseSpoolFileHandle+0x89
+0012fd8c 004119f1 Test!UseUnknownSpoolFileHandle+0x53!The suspect routine tried to use unknown Spool handle
+0012ff48 00416936 Test!wmain+0x201
+0012ff98 0041677d Test!__tmainCRTStartup+0x1a6
+0012ffa0 76413833 Test!wmainCRTStartup+0xd
+0012ffac 775fa9bd KERNEL32!BaseThreadInitThunk+0xe
+0012ffec 00000000 ntdll!_RtlUserThreadStart+0x23</pre></td></tr></table></span></div></content></div><h2 class="heading">Information displayed by Application Verifier</h2><div id="sectionSection3" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns=""> Parameter 1 - Handle being accessed. </p><p xmlns="">Parameter 2 - Not used. </p><p xmlns="">Parameter 3 - Not used. </p><p xmlns="">Parameter 4 - Not used. </p></content></div><h2 class="heading">Additional information</h2><div id="sectionSection4" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">Stop code: A01C</p></content></div><!--[if gte IE 5]>
+			<tool:tip element="languageFilterToolTip" avoidmouse="false"/>
+		<![endif]--></div><div id="footer"><p></p><hr></hr><br /><br /></div></div></body></html>

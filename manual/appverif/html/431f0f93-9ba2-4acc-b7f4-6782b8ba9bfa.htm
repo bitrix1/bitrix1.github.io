@@ -1,0 +1,135 @@
+<html DIR="LTR" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:tool="http://www.microsoft.com/tooltip"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=Windows-1252"></META><META NAME="save" CONTENT="history"></META><title>Webservices API Layer</title><link rel="stylesheet" type="text/css" href="../local/Classic.css"></link><script src="../local/script.js"></script></head><body><div><input type="hidden" id="userDataCache" class="userDataStyle"></input><input type="hidden" id="hiddenScrollOffset"></input></div><img id="dropDownImage" style="display:none; height:0; width:0;" src="../local/drpdown.gif"></img><img id="dropDownHoverImage" style="display:none; height:0; width:0;" src="../local/drpdown_orange.gif"></img><img id="collapseImage" style="display:none; height:0; width:0;" src="../local/collapse.gif"></img><img id="expandImage" style="display:none; height:0; width:0;" src="../local/exp.gif"></img><img id="copyImage" style="display:none; height:0; width:0;" src="../local/copycode.gif"></img><img id="copyHoverImage" style="display:none; height:0; width:0;" src="../local/copycodeHighlight.gif"></img><div id="header"><table width="100%" id="topTable"><tr id="headerTableRow1"><td align="left"><span id="runningHeaderText"></span></td></tr><tr id="headerTableRow2"><td align="left"><span id="nsrTitle">Webservices API Layer</span></td></tr><tr id="headerTableRow3"><td></td></tr></table></div><div id="mainSection"><div id="mainBody"><div id="allHistory" class="saveHistory" onsave="saveAll()" onload="loadAll()"></div><p></p><h2 class="heading">Windows Webservices API (WWSAPI) Verification Layer</h2><div id="sectionSection0" class="section"><content xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"><p xmlns="">The WWSAPI plug-in allows developers to catch instances of:</p><p xmlns="">1) A WWSAPI being called which references an invalid intrinsic WWSAPI object.</p><p xmlns="">2) A WWSAPI being called which references a single threaded object already in use.</p><p xmlns="">3) An intrinsic object freed with an asynchronous call pending.</p><p xmlns="">4) Calling blocking APIs from short threads.</p><p xmlns="">Additionally, this plug-in:</p><p xmlns="">5) Tracks the use of objects from instantiation to deletion.</p><p xmlns="">6) Force calls that can be completed asynchronously to be completed synchronously.  This is to prevent applications depending on a particular behavior from a call taking a WS_ASYNC_CONTEXT.</p><p xmlns="">7) Provides a human readable description when an API is passed a bad object, or an object is in use using the !avrf –ws –obj debugger extension (shown below)</p><p xmlns="">8) For channel, service proxy and service host, each call tracked will show the current state of the object.</p><p xmlns="">By default, the following checkers are enabled:</p><p xmlns="">Property NameDescriptionValidateObjectValidates that the intrinsic object is validTrackObjectTracks the use of an object through its lifetime</p><p xmlns="">Other checkers that can be enabled in this provider through the properties UI are:</p><p xmlns="">Property NameDescriptionCheckTimeoutValidates that async functions are completed within the timeout (specified as TimeoutValForceSyncForce the sync path to be taken when a WS_ASYNC_CONTEXT context is supplied to an API.</p><p xmlns="">A debugger extension is provided (!avrf –ws –obj) which displays opened and closed intrinsic WWSAPI objects.  If this extension is suffixed by an object, it will display verbose information about the usage of this object.</p><p xmlns="">!avrf -ws –obj</p><p xmlns="">This command displays the intrinsic WWSAPI objects which are being tracked, both created and closed.  Note that the closed objects are stored in a circular queue, so there is a ceiling to the total number of objects tracked.</p><p xmlns="">Objects are added when the following APIs successfully complete: WsCreateChannel(), WsCreateChannelForListener(), WsCreateServiceHost(), WsCreateServiceProxy(), WsCreateServiceProxyFromTemplate(), WsCreateError(), WsCreateHeap(), WsCreateListener(), WsCreateMetadata(), WsCreateMessage(), WsCreateMessageForChannel(), WsCreateReader(), WsCreateWriter(), WsCreateXmlBuffer(), WsReadXmlBuffer(), WsReadXmlBufferFromBytes()</p><p xmlns="">Objects are moved from the created to the freed list when the corresponding WsFree*() function is called and completes.</p><p xmlns="">!avrf –ws –obj [OBJECT]</p><p xmlns="">This command displays the usage of an intrinsic WWSAPI object.  The usage information includes the stack when the object was created, used and freed.  If the object is a channel, service host or service proxy, it will display the state of the object prior to the API using the object is called.</p><p xmlns="">Here is an example of the !avrf –ws –obj usage options:</p><div class="code" xmlns=""><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th> </th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="../local/copycode.gif"></img>Copy Code</span></th></tr><tr><td colspan="2"><pre>0:001&gt; !avrf -ws -obj
+Objects dependent on internal objects allocated:
+
+
+Objects currently allocated:
+
+ 0x00000000048566C0 (Type=Heap, Thread=0x000001bc, Pending Operations=0)
+ 0x0000000001BE6780 (Type=Error, Thread=0x000001bc, Pending Operations=0)
+ 0x0000000001C13580 (Type=Service Proxy, Thread=0x000001bc, Pending Operations=0)
+
+Freed objects:
+
+ 0x0000000001C17170 (Type=Service Proxy, Thread=0x000001bc)
+ 0x0000000004856730 (Type=Heap, Thread=0x000001bc)
+ 0x0000000001BE6820 (Type=Error, Thread=0x000001bc)
+
+0:001&gt; !avrf -ws -obj 0x0000000001C13580
+
+Object @ 0x0000000001C13580
+        Type = Service Proxy
+        Thread = 0x000001bc
+        Internal Reference = 0x00000000026C5E80
+
+Created stack:
+  vfnws!VfHookWsCreateServiceProxy+0x00aa
+  BLUESTONE!WST_WebServices::WsCreateServiceProxy+0x00d8
+  BLUESTONE!ServiceProxy::Connect+0x0116
+  BLUESTONE!ServiceModel_SimpleTest::SimpleClient+0x0607
+  BLUESTONE!ServiceModelTestGroup_Simple_Test02_Run+0x0041
+  BLUESTONE!Fnshell2::FnshellConfiguration::RunTest+0x002e
+  BLUESTONE!Fnshell2::TESTCASE::Run+0x00d6
+  BLUESTONE!fnsMsgProc+0x02d6
+  BLUESTONE!fnsRunTestsWorkerThread+0x085f
+  KERNEL32!BaseThreadInitThunk+0x000d
+  ntdll!RtlUserThreadStart+0x001d
+
+Last 4 operations
+
+Operation #1 created in thread 0x00000000000001BC
+
+Service proxy state before operation = Created
+
+Callstack:
+  vfnws!VfHookWsGetServiceProxyProperty+0x0053
+  BLUESTONE!WST_WebServices::WsGetServiceProxyProperty+0x009b
+  BLUESTONE!ServiceProxy::GetState+0x004b
+  BLUESTONE!ServiceProxy::VerifyState+0x001c
+  BLUESTONE!ServiceProxy::Connect+0x01c7
+  BLUESTONE!ServiceModel_SimpleTest::SimpleClient+0x0607
+  BLUESTONE!ServiceModelTestGroup_Simple_Test02_Run+0x0041
+  BLUESTONE!Fnshell2::FnshellConfiguration::RunTest+0x002e
+  BLUESTONE!Fnshell2::TESTCASE::Run+0x00d6
+  BLUESTONE!fnsMsgProc+0x02d6
+  BLUESTONE!fnsRunTestsWorkerThread+0x085f
+  KERNEL32!BaseThreadInitThunk+0x000d
+  ntdll!RtlUserThreadStart+0x001d
+
+Operation #2 created in thread 0x00000000000001BC
+
+Service proxy state before operation = Created
+
+Callstack:
+  vfnws!VfHookWsOpenServiceProxy+0x0079
+  BLUESTONE!WST_WebServices::WsOpenServiceProxy+0x0092
+  BLUESTONE!ServiceProxy::Connect+0x03d3
+  BLUESTONE!ServiceModel_SimpleTest::SimpleClient+0x0607
+  BLUESTONE!ServiceModelTestGroup_Simple_Test02_Run+0x0041
+  BLUESTONE!Fnshell2::FnshellConfiguration::RunTest+0x002e
+  BLUESTONE!Fnshell2::TESTCASE::Run+0x00d6
+  BLUESTONE!fnsMsgProc+0x02d6
+  BLUESTONE!fnsRunTestsWorkerThread+0x085f
+  KERNEL32!BaseThreadInitThunk+0x000d
+  ntdll!RtlUserThreadStart+0x001d
+
+Operation #3 created in thread 0x00000000000001BC
+
+Service proxy state before operation = Open
+
+Callstack:
+  vfnws!VfHookWsGetServiceProxyProperty+0x0053
+  BLUESTONE!WST_WebServices::WsGetServiceProxyProperty+0x009b
+  BLUESTONE!ServiceProxy::GetState+0x004b
+  BLUESTONE!ServiceProxy::VerifyState+0x001c
+  BLUESTONE!ServiceProxy::Connect+0x0484
+  BLUESTONE!ServiceModel_SimpleTest::SimpleClient+0x0607
+  BLUESTONE!ServiceModelTestGroup_Simple_Test02_Run+0x0041
+  BLUESTONE!Fnshell2::FnshellConfiguration::RunTest+0x002e
+  BLUESTONE!Fnshell2::TESTCASE::Run+0x00d6
+  BLUESTONE!fnsMsgProc+0x02d6
+  BLUESTONE!fnsRunTestsWorkerThread+0x085f
+  KERNEL32!BaseThreadInitThunk+0x000d
+  ntdll!RtlUserThreadStart+0x001d
+
+Operation #4 created in thread 0x00000000000001BC
+
+Service proxy state before operation = Open
+
+Callstack:
+  vfnws!VfHookWsCall+0x00a6
+  BLUESTONE!DefaultBinding_ICalculator_Add+0x008b
+  BLUESTONE!ServiceModelTestGroup_Simple_Function+0x010a
+  BLUESTONE!ServiceModel_SimpleTest::SimpleClient+0x069a
+  BLUESTONE!ServiceModelTestGroup_Simple_Test02_Run+0x0041
+  BLUESTONE!Fnshell2::FnshellConfiguration::RunTest+0x002e
+  BLUESTONE!Fnshell2::TESTCASE::Run+0x00d6
+  BLUESTONE!fnsMsgProc+0x02d6
+  BLUESTONE!fnsRunTestsWorkerThread+0x085f
+  KERNEL32!BaseThreadInitThunk+0x000d
+  ntdll!RtlUserThreadStart+0x001d
+
+Asynchronous Callback = BLUESTONE!ServiceModelTestGroup_Simple_Callback
+Asynchronous CallbackState = 0x0000000005EBDC30
+
+Completed asynchronously with HRESULT=0x00000000 in thread 0x00000000000001BC
+
+Asynchronous callback stack:
+  vfnws!VfHookWsCall+0x00e3
+  BLUESTONE!DefaultBinding_ICalculator_Add+0x008b
+  BLUESTONE!ServiceModelTestGroup_Simple_Function+0x010a
+  BLUESTONE!ServiceModel_SimpleTest::SimpleClient+0x069a
+  BLUESTONE!ServiceModelTestGroup_Simple_Test02_Run+0x0041
+  BLUESTONE!Fnshell2::FnshellConfiguration::RunTest+0x002e
+  BLUESTONE!Fnshell2::TESTCASE::Run+0x00d6
+  BLUESTONE!fnsMsgProc+0x02d6
+  BLUESTONE!fnsRunTestsWorkerThread+0x085f
+  KERNEL32!BaseThreadInitThunk+0x000d
+  ntdll!RtlUserThreadStart+0x001d
+
+
+Closed stack:
+
+0:001&gt;
+</pre></td></tr></table></span></div></content></div><!--[if gte IE 5]>
+			<tool:tip element="languageFilterToolTip" avoidmouse="false"/>
+		<![endif]--></div><div id="footer"><p></p><hr></hr><br /><br /></div></div></body></html>
